@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#e9eaff" />
+  <meta name="description" content="Mood Lamp — 私密、轻盈的情绪记录与灯光互动体验。" />
+  <title>Mood Lamp</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g'%3E%3Cstop stop-color='%235ad8ff'/%3E%3Cstop offset='.5' stop-color='%23755cff'/%3E%3Cstop offset='1' stop-color='%23ff85cf'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='18' fill='%23f6f7ff'/%3E%3Ccircle cx='32' cy='30' r='18' fill='none' stroke='url(%23g)' stroke-width='8'/%3E%3Cpath d='M24 49h16' stroke='%23755cff' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./overrides.css" />
+  <link rel="stylesheet" href="./layout-fix.css" />
+  <link rel="stylesheet" href="./stack-fix.css" />
+  <link rel="stylesheet" href="./map.css" />
+  <link rel="stylesheet" href="./ai.css" />
+  <link rel="stylesheet" href="./lamp-controls.css" />
+</head>
+<body>
+  <svg class="icon-sprite" aria-hidden="true">
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.55 5.16 5.7.83-4.12 4.02.97 5.68L12 16l-5.1 2.69.97-5.68L3.75 9l5.7-.83z"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4m8-4v4M3 10h18"/></symbol>
+    <symbol id="i-lamp" viewBox="0 0 24 24"><path d="M5.5 10.2a6.5 6.5 0 1 1 13 0c0 2.65-1.25 4.18-2.65 5.5h-7.7C6.75 14.38 5.5 12.85 5.5 10.2Z"/><path d="M8.2 19.4h7.6m-6.6-3.7-.9 3.7h7.4l-.9-3.7"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><path d="M12 21s6-5.15 6-11a6 6 0 1 0-12 0c0 5.85 6 11 6 11Z"/><circle cx="12" cy="10" r="2.2"/></symbol>
+    <symbol id="i-signal" viewBox="0 0 24 24"><rect x="3" y="15" width="3" height="5" rx="1.5"/><rect x="8" y="12" width="3" height="8" rx="1.5"/><rect x="13" y="8" width="3" height="12" rx="1.5"/><rect x="18" y="4" width="3" height="16" rx="1.5"/></symbol>
+    <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M4.5 9.2a11.2 11.2 0 0 1 15 0M7.6 12.8a6.7 6.7 0 0 1 8.8 0M10.7 16.3a2.2 2.2 0 0 1 2.6 0"/></symbol>
+    <symbol id="i-battery" viewBox="0 0 28 24"><rect x="2" y="7" width="21" height="11" rx="3"/><path d="M25.5 10.2v4.6"/><rect class="fill" x="5" y="10" width="14" height="5" rx="1"/></symbol>
+  </svg>
+  <main class="stage">
+    <header class="brand" aria-label="Mood Lamp">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <div><strong>MOOD LAMP</strong><span>emotion, made visible</span></div>
+    </header>
+    <button class="language-button page-language" id="languageButton" aria-label="Switch website language"><span class="lang-active">中</span><span>EN</span></button>
+
+    <section class="intro">
+      <p class="eyebrow">YOUR INNER WEATHER</p>
+      <h1>今天的情绪，<br /><em>是什么颜色？</em></h1>
+      <p class="intro-copy">选择一种感受，让它变成只属于你的光。所有记录仅保存在当前设备。</p>
+      <div class="live-status"><i></i><span id="deskStatus">Mood Lamp 已连接</span></div>
+    </section>
+
+    <section class="phone-wrap" aria-label="Mood Lamp 手机应用 Demo">
+      <div class="phone-glow" id="phoneGlow"></div>
+      <div class="phone">
+        <div class="side-button volume-one"></div><div class="side-button volume-two"></div>
+        <div class="screen">
+          <div class="island"></div>
+          <div class="statusbar"><span id="statusTime">KT</span><span class="system-icons">
+            <svg class="cellular" viewBox="0 0 20 14" aria-label="Cellular signal"><rect x="0" y="9" width="3" height="5" rx="1.5"/><rect x="5" y="6" width="3" height="8" rx="1.5"/><rect x="10" y="3" width="3" height="11" rx="1.5"/><rect x="15" y="0" width="3" height="14" rx="1.5"/></svg>
+            <svg class="wifi" viewBox="0 0 20 18" aria-label="Wi-Fi"><path d="M2.4 5.4C6.8 2 13.2 2 17.6 5.4"/><path d="M5.4 9.3c2.7-2.1 6.5-2.1 9.2 0"/><circle cx="10" cy="13.4" r="1.55"/></svg>
+            <svg class="battery" viewBox="0 0 27 14" aria-label="Battery"><rect class="battery-case" x="1" y="1" width="22" height="12" rx="3"/><rect class="battery-level" x="3.3" y="3.3" width="15.5" height="7.4" rx="1.3"/><path class="battery-cap" d="M25 5v4"/></svg>
+          </span></div>
+
+          <section class="view active" data-view="today">
+            <div class="toprow"><button class="avatar" aria-label="个人资料">Y</button><button class="lamp-button connected" id="lampButton" aria-label="切换 Mood Lamp 连接"><span></span></button></div>
+            <div class="today-heading"><p id="todayDate">Wednesday, June 7</p><h2>现在感觉如何？</h2></div>
+            <button class="orb-control" id="orbControl" aria-label="打开情绪选择">
+              <span class="orb" id="orb"><span class="orb-core"></span></span>
+              <span class="orb-prompt">轻触记录</span>
+            </button>
+            <div class="latest" id="latestCard">
+              <span>最近一次</span><strong id="latestMood">平静 · 62%</strong><time id="latestTime">今天 08:30</time>
+            </div>
+            <div class="history-block">
+              <div class="history-heading"><span id="historyTitle">过去的记录</span><small id="historyCount"></small></div>
+              <div class="card-stack" id="cardStack"></div>
+            </div>
+          </section>
+
+          <section class="view" data-view="calendar">
+            <div class="page-title"><button class="mini-back" data-go="today" aria-label="返回"></button><div><p>YOUR RHYTHM</p><h2>情绪日历</h2></div></div>
+            <div class="month-row"><button id="prevMonth">‹</button><strong id="monthLabel"></strong><button id="nextMonth">›</button></div>
+            <div class="weekdays"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+            <div class="insight-card"><span>本月情绪</span><strong id="insightTitle">柔和而稳定</strong><p id="insightText">你的记录会在这里形成个人情绪节奏。</p></div>
+            <article class="ai-card">
+              <div class="ai-card-head"><span class="ai-spark">✦</span><div><small id="aiLabel">AI 情绪助手</small><h3 id="aiTitle">本月情绪解读</h3></div><b id="aiStatus">平衡</b></div>
+              <p id="aiAnalysis"></p>
+              <div class="ai-metrics"><div><span id="aiVarietyLabel">情绪多样性</span><strong id="aiVariety"></strong></div><div><span id="aiTrendLabel">强度趋势</span><strong id="aiTrend"></strong></div></div>
+              <div class="ai-advice"><span id="aiAdviceLabel">给你的建议</span><p id="aiAdvice"></p></div>
+              <p class="ai-disclaimer" id="aiDisclaimer">仅作情绪自我觉察的辅助参考，不构成医学诊断。</p>
+            </article>
+          </section>
+
+          <section class="view" data-view="lamp">
+            <div class="page-title"><button class="mini-back" data-go="today" aria-label="返回"></button><div><p>AMBIENT COMPANION</p><h2>Mood Lamp</h2></div></div>
+            <div class="lamp-visual interactive-lamp" id="interactiveLamp"><div class="lamp-halo" id="lampHalo"></div><div class="light-disc"></div><div class="lamp-shadow"></div></div>
+            <div class="lamp-state"><i></i><strong id="lampState">已连接</strong><span id="activeLampMeta">卧室 · 92%</span></div>
+            <label class="range-label"><span>亮度</span><strong id="brightnessValue">72%</strong></label>
+            <input id="brightness" type="range" min="10" max="100" value="72" />
+            <button class="power-button" id="powerButton">关闭灯光</button>
+            <section class="room-lamps" aria-labelledby="roomLampsTitle">
+              <div class="room-lamps-heading"><div><span id="roomLampsEyebrow">其他空间</span><h3 id="roomLampsTitle">选择一盏灯</h3></div><small id="roomLampsHint">轻触切换</small></div>
+              <div class="room-lamp-options" id="roomLampOptions"></div>
+            </section>
+          </section>
+
+          <section class="view" data-view="checkin">
+            <div class="page-title"><button class="mini-back close-back" data-go="today" aria-label="关闭">×</button><div><p>CHECK IN</p><h2 id="checkinTitle">选择此刻的感受</h2></div></div>
+            <div class="mood-orbit" id="moodOrbit"></div>
+            <div class="selected-info"><span id="selectedEmoji">◌</span><strong id="selectedName">选择一种情绪</strong><p id="selectedHint">无需解释，诚实感受就好</p></div>
+            <label class="range-label"><span>感受强度</span><strong id="intensityValue">50%</strong></label>
+            <input id="intensity" type="range" min="1" max="100" value="50" />
+            <div class="location-field"><span id="locationLabel">此刻在哪里？</span><div class="location-options" id="locationOptions"></div></div>
+            <textarea id="note" maxlength="120" placeholder="想补充些什么？（可选）"></textarea>
+            <button class="save-button" id="saveButton" disabled>保存这束光</button>
+          </section>
+
+          <section class="view" data-view="map">
+            <div class="page-title map-title"><button class="mini-back" data-go="today" aria-label="返回"></button><div><p>YOUR EMOTIONAL PLACES</p><h2 id="mapTitle">情绪地图</h2></div></div>
+            <p class="map-intro" id="mapIntro">看看不同地点如何承载你的感受。</p>
+            <div class="mood-map" id="moodMap" aria-label="Mood map"></div>
+            <div class="map-legend" id="mapLegend"></div>
+            <article class="place-card" id="placeCard">
+              <div class="place-card-head"><div><span id="placeType"></span><h3 id="placeName"></h3></div><strong id="placeCount"></strong></div>
+              <div class="place-spectrum" id="placeSpectrum"></div>
+              <p id="placeSummary"></p>
+              <div class="place-recent" id="placeRecent"></div>
+            </article>
+            <p class="privacy-note" id="mapPrivacy">位置仅用于当前设备上的个人情绪回顾。</p>
+          </section>
+
+          <div class="toast" id="toast" role="status">情绪已经被温柔地记录</div>
+          <div class="record-dialog" id="recordDialog" aria-hidden="true">
+            <button class="dialog-backdrop" id="dialogBackdrop" aria-label="Close details"></button>
+            <article class="record-sheet" role="dialog" aria-modal="true" aria-labelledby="recordMood">
+              <button class="dialog-close" id="dialogClose" aria-label="Close">×</button>
+              <span class="detail-label" id="detailLabel">情绪记录</span>
+              <div class="detail-orb" id="detailOrb"></div>
+              <h3 id="recordMood"></h3>
+              <div class="detail-grid"><div><span id="detailIntensityLabel">强度</span><strong id="recordIntensity"></strong></div><div><span id="detailTimeLabel">时间</span><strong id="recordDate"></strong></div><div class="detail-location"><span id="detailLocationLabel">地点</span><strong id="recordLocation"></strong></div></div>
+              <div class="detail-note"><span id="detailNoteLabel">备注</span><p id="recordNote"></p></div>
+              <p class="readonly-note" id="readonlyNote">这是一条只读记录</p>
+            </article>
+          </div>
+          <nav class="tabbar" aria-label="主要导航">
+            <button class="tab active" data-go="today"><svg><use href="#i-star"/></svg><span data-i18n="navToday">今天</span></button>
+            <button class="tab" data-go="calendar"><svg><use href="#i-calendar"/></svg><span data-i18n="navCalendar">日历</span></button>
+            <button class="add" data-go="checkin" aria-label="新增情绪">＋</button>
+            <button class="tab" data-go="lamp"><svg><use href="#i-lamp"/></svg><span data-i18n="navLamp">灯光</span></button>
+            <button class="tab" data-go="map"><svg><use href="#i-more"/></svg><span data-i18n="navMore">地图</span></button>
+          </nav>
+        </div>
+      </div>
+    </section>
+
+    <aside class="palette" aria-label="情绪颜色说明">
+      <span id="paletteTitle">8 种情绪</span><div id="paletteDots"></div><p id="paletteCopy">每一种感受<br />都有自己的光</p>
+    </aside>
+  </main>
+  <script src="./app.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+.latest{cursor:pointer;transition:transform .22s,box-shadow .22s}.latest:hover{transform:translateY(-2px);box-shadow:0 15px 34px rgba(82,86,129,.13)}
+.card-stack{transition:height .34s cubic-bezier(.22,.8,.22,1)}
+.card-stack:hover{height:360px}
+.card-stack:hover .history-card{box-shadow:0 12px 27px rgba(66,69,105,.14)}
+.card-stack:hover .history-card:nth-child(1){transform:rotate(-1.2deg) translateY(0) scale(1)}
+.card-stack:hover .history-card:nth-child(2){transform:rotate(1.3deg) translateY(78px) scale(.985)}
+.card-stack:hover .history-card:nth-child(3){transform:rotate(-1deg) translateY(156px) scale(.97)}
+.card-stack:hover .history-card:nth-child(4){transform:rotate(.8deg) translateY(234px) scale(.955)}
+.card-stack:hover .history-card:hover{z-index:8;transform:translateY(var(--hover-y,0)) rotate(0) scale(1.02);box-shadow:0 18px 38px rgba(66,69,105,.22)}
+.card-stack:hover .history-card:nth-child(1):hover{--hover-y:-5px}
+.card-stack:hover .history-card:nth-child(2):hover{--hover-y:73px}
+.card-stack:hover .history-card:nth-child(3):hover{--hover-y:151px}
+.card-stack:hover .history-card:nth-child(4):hover{--hover-y:229px}
+@media (hover:none){.card-stack{height:325px}.card-stack .history-card:nth-child(1){transform:rotate(-1deg) translateY(0)}.card-stack .history-card:nth-child(2){transform:rotate(1.5deg) translateY(68px) scale(.985)}.card-stack .history-card:nth-child(3){transform:rotate(-1.4deg) translateY(136px) scale(.97)}.card-stack .history-card:nth-child(4){transform:rotate(.8deg) translateY(204px) scale(.955)}}
