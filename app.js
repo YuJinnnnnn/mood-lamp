@@ -19,7 +19,7 @@ const lampRooms=[
  {id:'living',name:'客厅',en:'Living room',brightness:86,on:true,shape:'pebble',gradient:['#fff2a8','#ffc974','#ff9fcf']}
 ];
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-let selected=null, selectedLocation='home', activePlace='home', activeLampRoom='bedroom', currentDate=new Date(), lampOn=true, lang=localStorage.getItem('mood-lamp-lang')||'zh';
+let selected=null, selectedLocation='home', activePlace='home', activeLampRoom='bedroom', currentDate=new Date(), lampOn=true, lang=localStorage.getItem('mood-lamp-lang-v2')||'en';
 let records=JSON.parse(localStorage.getItem('mood-lamp-records')||'[]');
 const seedRecords=[
  {id:'sample-calm',mood:'trust',location:'friend',intensity:64,note:'Finished the reading plan and had a relaxed talk with a close friend.',noteZh:'完成了阅读计划，也和亲近的朋友轻松聊了会儿。',date:new Date(Date.now()-86400000*2).toISOString(),sample:true},
@@ -53,7 +53,7 @@ function init(){
 
 const copy={zh:{deskEyebrow:'你的内在天气',deskTitle:'今天的情绪，<br><em>是什么颜色？</em>',deskCopy:'选择一种感受，让它变成只属于你的光。所有记录仅保存在当前设备。',connected:'Mood Lamp 已连接',disconnected:'Mood Lamp 未连接',question:'现在感觉如何？',tap:'轻触记录',latest:'最近一次',today:'今天',calendar:'情绪日历',lamp:'Mood Lamp',checkin:'选择此刻的感受',intensity:'感受强度',note:'想补充些什么？（可选）',save:'保存这束光',brightness:'亮度',powerOff:'关闭灯光',powerOn:'打开灯光',navToday:'今天',navCalendar:'日历',navLamp:'灯光',navMore:'地图',recorded:'情绪已经被温柔地记录',select:'选择一种情绪',hint:'无需解释，诚实感受就好',monthMood:'本月情绪'},en:{deskEyebrow:'YOUR INNER WEATHER',deskTitle:'What color is<br><em>your mood today?</em>',deskCopy:'Choose a feeling and let it become your light. Your entries stay private on this device.',connected:'Mood Lamp connected',disconnected:'Mood Lamp disconnected',question:'How are you feeling?',tap:'Tap to check in',latest:'Latest check-in',today:'Today',calendar:'Mood Calendar',lamp:'Mood Lamp',checkin:'Choose your feeling',intensity:'Feeling intensity',note:'Add a note (optional)',save:'Save this light',brightness:'Brightness',powerOff:'Turn light off',powerOn:'Turn light on',navToday:'Today',navCalendar:'Calendar',navLamp:'Lamp',navMore:'Map',recorded:'Your feeling has been gently saved',select:'Choose a feeling',hint:'No need to explain. Just notice.',monthMood:'This month'}};
 function setLanguage(next){
- lang=next;localStorage.setItem('mood-lamp-lang',lang);document.documentElement.lang=lang==='zh'?'zh-CN':'en';const c=copy[lang];
+ lang=next;localStorage.setItem('mood-lamp-lang-v2',lang);document.documentElement.lang=lang==='zh'?'zh-CN':'en';const c=copy[lang];
  $('.eyebrow').textContent=c.deskEyebrow;$('.intro h1').innerHTML=c.deskTitle;$('.intro-copy').textContent=c.deskCopy;$('.today-heading h2').textContent=c.question;$('.orb-prompt').textContent=c.tap;$('.latest span').textContent=c.latest;
  $$('[data-i18n]').forEach(el=>el.textContent=c[el.dataset.i18n]);$$('#languageButton span').forEach((el,i)=>el.classList.toggle('lang-active',lang==='zh'?i===0:i===1));
  const titles=$$('.page-title h2');titles[0].textContent=c.calendar;titles[1].textContent=c.lamp;titles[2].textContent=c.checkin;
